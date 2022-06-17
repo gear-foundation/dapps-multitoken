@@ -1,83 +1,84 @@
 export const payloads = {
-    mint: {
-        Mint: {
-            amount: 10,
-            token_metadata: {
-                title: "Token #0",
-                description: "Just a random description",
-                media: "Just a random media",
-                reference: "Just a random reference",
+    mint: function(amount: number, metadata: any) {
+        return {
+            Mint: {
+                amount,
+                token_metadata: metadata,
             }
-        },
-    },
-    burn: {
-        Burn: {
-            id: 0,
-            amount: 2,
-        },
-    },
-    balanceOf: {
-        BalanceOf: {
-            account: `0x5FxowUbNWoiZBavDB2gCq7JtjDX4KhNRH8ZNAGq7p6gDcbZY`,
-            id: 0,
-        },
-    },
-    balanceOfBatch: {
-        BalanceOfBatch: {
-            accounts: [`0x5FxowUbNWoiZBavDB2gCq7JtjDX4KhNRH8ZNAGq7p6gDcbZY`],
-            ids: [0],
-        },
-    },
-    mintBatch: {
-        MintBatch: {
-            ids: [1, 2],
-            amounts: [10, 20],
-            tokens_metadata: [
-                {
-                    title: "Token #1",
-                    description: "Just a random description",
-                    media: "Just a random media",
-                    reference: "Just a random reference",
-                },
-                {
-                    title: "Token #2",
-                    description: "Just a random description",
-                    media: "Just a random media",
-                    reference: "Just a random reference",
-                }
-            ],
-        },
-    },
-    transferFrom: {
-        TransferFrom: {
-            from: `0x5FxowUbNWoiZBavDB2gCq7JtjDX4KhNRH8ZNAGq7p6gDcbZY`,
-            to: `0x8260b9aae93a8486064217041d5ee6b81a9f716ba428ce20692061a7b3b35662`,
-            id: 0,
-            amount: 2,
-        },
-    },
-    batchTransferFrom: {
-        BatchTransferFrom: {
-            from: `0x5FxowUbNWoiZBavDB2gCq7JtjDX4KhNRH8ZNAGq7p6gDcbZY`,
-            to: `0x8260b9aae93a8486064217041d5ee6b81a9f716ba428ce20692061a7b3b35662`,
-            ids: [0],
-            amounts: [0],
-        },
-    },
-    burnBatch: {
-        BurnBatch: {
-            ids: [0],
-            amounts: [1],
-        },
-    },
-    approve: {
-        Approve: {
-            account: `0x8260b9aae93a8486064217041d5ee6b81a9f716ba428ce20692061a7b3b35662`,
-        },
-    },
-    revokeApproval: {
-        RevokeApproval: {
-            account: `0x8260b9aae93a8486064217041d5ee6b81a9f716ba428ce20692061a7b3b35662`,
         }
-    }
+    },
+    burn: function(id: number, amount: number) {
+        return {
+            Burn: {
+                id,
+                amount,
+            }
+        }
+    },
+    balanceOf: function(account: string, id: number) {
+        return {
+            BalanceOf: {
+                account, id,
+            }
+        }
+    },
+    balanceOfBatch: function(accounts: string[], ids: number[]) {
+        return {
+            BalanceOfBatch: {
+                accounts,
+                ids,
+            }
+        }
+    },
+    mintBatch: function(ids: number[], amounts: number[], metadata: any[]) {
+        return {
+            MintBatch: {
+                ids,
+                amounts,
+                token_metadata: metadata,
+            }
+        }
+    },
+    transferFrom: function(from: string, to: string, id: number, amount: number) {
+        return {
+            TransferFrom: {
+                from,
+                to,
+                id,
+                amount,
+            }
+        }
+    },
+    batchTransferFrom: function(from: string, to: string, ids: number[], amounts: number[]) {
+        return {
+            BatchTransferFrom: {
+                from,
+                to,
+                ids,
+                amounts,
+            }
+        }
+    },
+    burnBatch: function(ids: number[], amounts: number[]) {
+        return {
+            BurnBatch: {
+                ids,
+                amounts,
+            }
+        }
+    },
+    approve: function(account: string) {
+        return {
+            Approve: {
+                account,
+            }
+        }
+    },
+    revokeApproval: function(account: string) {
+        return {
+            RevokeApproval: {
+                account,
+            }
+        }
+    },
 };

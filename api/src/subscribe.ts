@@ -48,8 +48,12 @@ export const events = async (pathToMeta?: string) => {
 };
 
 async function main() {
-
-    await events(process.env.META_WASM);
+  await events(process.env.META_WASM);
 }
 
 main()
+  .then(() => process.exit(0))
+  .catch((error) => {
+    console.log(error);
+    process.exit(1);
+});
