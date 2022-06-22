@@ -1,4 +1,11 @@
 export const payloads = {
+    init: function(name: string, symbol: string, base_uri: string) {
+        return {
+            name,
+            symbol,
+            base_uri,
+        }
+    },
     mint: function(amount: number, metadata: any) {
         return {
             Mint: {
