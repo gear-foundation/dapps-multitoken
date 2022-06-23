@@ -1,6 +1,4 @@
 use gear_lib::multitoken::io::*;
-use gstd::String;
-use gtest::System;
 
 mod utils;
 use utils::*;
@@ -11,7 +9,7 @@ const TOKENS_TO_BURN: u128 = 50;
 const TOKEN_ID: u128 = 0;
 
 #[test]
-fn mint__() {
+fn mint() {
     let sys = System::new();
     init_mtk(&sys, USERS[0]);
     let mtk = sys.get_program(1);

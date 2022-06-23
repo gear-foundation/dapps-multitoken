@@ -1,7 +1,7 @@
 use codec::Encode;
-use gear_lib::multitoken::{io::*, state::*};
+pub use gear_lib::multitoken::{io::*, state::*};
 use gstd::{ActorId, String};
-use gtest::{Program, System};
+pub use gtest::{Program, System};
 use multitoken_io::*;
 
 const ZERO_ID: ActorId = ActorId::new([0u8; 32]);
