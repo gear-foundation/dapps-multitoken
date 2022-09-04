@@ -34,14 +34,16 @@ gstd::metadata! {
 }
 
 #[no_mangle]
-unsafe extern "C" fn init() {
+extern "C" fn init() {
     let config: InitMTK = msg::load().expect("Unable to decode InitConfig");
     let mut multi_token = SimpleMTK::default();
     multi_token.tokens.name = config.name;
     multi_token.tokens.symbol = config.symbol;
     multi_token.tokens.base_uri = config.base_uri;
     multi_token.owner = msg::source();
-    CONTRACT = Some(multi_token);
+    unsafe {
+        CONTRACT = Some(multi_token);
+    }
 }
 
 #[no_mangle]
