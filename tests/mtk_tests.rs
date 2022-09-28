@@ -199,21 +199,6 @@ fn transform() {
     let mtk = sys.get_program(1);
     mint_internal(&mtk, USERS[0], TOKEN_AMOUNT, TOKEN_ID, None, false);
     check_balance(&mtk, USERS[0], TOKEN_ID, TOKEN_AMOUNT);
-    // let nft_ids: Vec<Vec<u128>> = vec![vec![NFT_1_ID, NFT_2_ID]];
-    // let nft_metadata: Vec<Vec<Option<TokenMetadata>>> = vec![vec![
-    //     Some(TokenMetadata {
-    //         title: Some(String::from("Kitty")),
-    //         description: Some(String::from("Just a test kitty #1")),
-    //         media: Some(String::from("www.example.com/erc1155/kitty.png")),
-    //         reference: Some(String::from("www.example.com/erc1155/kitty")),
-    //     }),
-    //     Some(TokenMetadata {
-    //         title: Some(String::from("Kitty")),
-    //         description: Some(String::from("Just a test kitty #2")),
-    //         media: Some(String::from("www.example.com/erc1155/kitty.png")),
-    //         reference: Some(String::from("www.example.com/erc1155/kitty")),
-    //     }),
-    // ]];
     let nfts = vec![BurnToNFT {
         account: ActorId::from(USERS[1]),
         nfts_ids: vec![NFT_1_ID, NFT_2_ID],

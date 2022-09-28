@@ -248,8 +248,8 @@ pub fn transform_internal(
 ) {
     let mut ids = vec![];
     for burn_info in &nfts {
-        for id in burn_info.nfts_ids.clone() {
-            ids.push(id);
+        for id in &burn_info.nfts_ids {
+            ids.push(*id);
         }
     }
     let res = mtk.send(
@@ -265,7 +265,7 @@ pub fn transform_internal(
         operator: from.into(),
         from: ActorId::zero(),
         to: ActorId::zero(),
-        ids: ids.to_vec(),
+        ids,
         amounts: vec![NFT_COUNT; amount as usize],
     }
     .encode();

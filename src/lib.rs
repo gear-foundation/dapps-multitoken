@@ -167,7 +167,7 @@ impl SimpleMTKCore for SimpleMTK {
             .insert(self.token_id, sup.saturating_sub(amount));
         let mut ids = vec![];
 
-        for burn_info in &nfts {
+        for burn_info in nfts {
             if burn_info.account.is_zero() {
                 panic!("MTK: Mint to zero address");
             }
@@ -176,30 +176,16 @@ impl SimpleMTKCore for SimpleMTK {
             }
             burn_info
                 .nfts_metadata
-                .iter()
-                .cloned()
+                .into_iter()
                 .enumerate()
                 .for_each(|(i, meta)| {
                     self.mint_impl(&burn_info.account, &burn_info.nfts_ids[i], NFT_COUNT, meta)
                 });
-            for id in &burn_info.nfts_ids {
-                ids.push(*id);
+            for id in burn_info.nfts_ids {
+                ids.push(id);
             }
         }
-        // // now we need to mint NFTs (same - just use mint_implementation to remove excessive usage)
-        // for (idx, metadata) in nfts_metadata.iter().enumerate() {
-        //     let amount = metadata.len();
-        //     if accounts[idx].is_zero() {
-        //         panic!("MTK: Mint to zero address")
-        //     }
-        //     if nft_ids[idx].len() != amount {
-        //         panic!("MTK: ids and amounts length mismatch")
-        //     }
-        //     metadata.iter().cloned().enumerate().for_each(|(i, meta)| {
-        //         self.mint_impl(&accounts[idx], &nft_ids[idx][i], NFT_COUNT, meta)
-        //     });
-        //     ids.append(&mut nft_ids[idx]);
-        // }
+
         msg::reply(
             MTKEvent::Transfer {
                 operator: msg::source(),
