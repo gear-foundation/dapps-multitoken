@@ -5,6 +5,17 @@ use gear_lib::multitoken::io::*;
 use gstd::{prelude::*, ActorId};
 use scale_info::TypeInfo;
 
+/// Transform to NFT piece of data.
+#[derive(Debug, Encode, Decode, TypeInfo)]
+pub struct BurnToNFT {
+    /// To which account mint NFTs.
+    pub account: ActorId,
+    /// NFTs' IDs.
+    pub nfts_ids: Vec<TokenId>,
+    /// NFTs' metadata.
+    pub nfts_metadata: Vec<Option<TokenMetadata>>,
+}
+
 #[derive(Debug, Encode, Decode, TypeInfo)]
 pub enum MyMTKAction {
     /// Mints a token.
@@ -154,12 +165,8 @@ pub enum MyMTKAction {
         id: TokenId,
         /// Amount of burnt token.
         amount: u128,
-        /// To which accounts to mint NFTs.
-        accounts: Vec<ActorId>,
-        /// NFTs' IDs.
-        nft_ids: Vec<Vec<TokenId>>,
-        /// NFTs metadata.
-        nfts_metadata: Vec<Vec<Option<TokenMetadata>>>,
+        /// NFT minting data.
+        nfts: Vec<BurnToNFT>,
     },
 }
 

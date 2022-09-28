@@ -20,14 +20,7 @@ pub trait SimpleMTKCore: MTKCore {
 
     fn burn(&mut self, id: TokenId, amount: u128);
 
-    fn transform(
-        &mut self,
-        id: TokenId,
-        amount: u128,
-        accounts: Vec<ActorId>,
-        nft_ids: Vec<Vec<TokenId>>,
-        nfts_metadata: Vec<Vec<Option<TokenMetadata>>>,
-    );
+    fn transform(&mut self, id: TokenId, amount: u128, nfts: Vec<BurnToNFT>);
 }
 
 static mut CONTRACT: Option<SimpleMTK> = None;
@@ -93,13 +86,9 @@ unsafe extern "C" fn handle() {
         MyMTKAction::BurnBatch { ids, amounts } => MTKCore::burn(multi_token, ids, amounts),
         MyMTKAction::Approve { account } => MTKCore::approve(multi_token, &account),
         MyMTKAction::RevokeApproval { account } => MTKCore::revoke_approval(multi_token, &account),
-        MyMTKAction::Transform {
-            id,
-            amount,
-            accounts,
-            nft_ids,
-            nfts_metadata,
-        } => SimpleMTKCore::transform(multi_token, id, amount, accounts, nft_ids, nfts_metadata),
+        MyMTKAction::Transform { id, amount, nfts } => {
+            SimpleMTKCore::transform(multi_token, id, amount, nfts)
+        }
     }
 }
 
@@ -158,21 +147,11 @@ impl SimpleMTKCore for SimpleMTK {
     /// * `accounts`: To which accounts to mint NFT.
     /// * `nft_ids`: NFTs' IDs to be minted.
     /// * `nfts_metadata`: NFT's metadata.
-    fn transform(
-        &mut self,
-        id: TokenId,
-        amount: u128,
-        accounts: Vec<ActorId>,
-        mut nft_ids: Vec<Vec<TokenId>>,
-        nfts_metadata: Vec<Vec<Option<TokenMetadata>>>,
-    ) {
-        // prechecks
-        if nft_ids.len() != nfts_metadata.len() {
-            panic!("MTK: number of ids, accounts and metadata pieces MUST be the same.");
-        }
+    fn transform(&mut self, id: TokenId, amount: u128, nfts: Vec<BurnToNFT>) {
+        // pre-checks
         let mut nft_count = 0;
-        for (_, ids) in nft_ids.iter().enumerate() {
-            nft_count += ids.len();
+        for info in &nfts {
+            nft_count += info.nfts_ids.len();
         }
         if amount as usize != nft_count {
             panic!("MTK: amount of burnt tokens MUST be equal to the amount of nfts.");
@@ -187,20 +166,40 @@ impl SimpleMTKCore for SimpleMTK {
             .supply
             .insert(self.token_id, sup.saturating_sub(amount));
         let mut ids = vec![];
-        // now we need to mint NFTs (same - just use mint_implementation to remove excessive usage)
-        for (idx, metadata) in nfts_metadata.iter().enumerate() {
-            let amount = nft_ids[idx].len();
-            if accounts[idx] == ActorId::zero() {
-                panic!("MTK: Mint to zero address")
+
+        for burn_info in &nfts {
+            if burn_info.account.is_zero() {
+                panic!("MTK: Mint to zero address");
             }
-            if nft_ids[idx].len() != amount {
-                panic!("MTK: ids and amounts length mismatch")
+            if burn_info.nfts_ids.len() != burn_info.nfts_metadata.len() {
+                panic!("MTK: ids and amounts length mismatch");
             }
-            metadata.iter().cloned().enumerate().for_each(|(i, meta)| {
-                self.mint_impl(&accounts[idx], &nft_ids[idx][i], NFT_COUNT, meta)
-            });
-            ids.append(&mut nft_ids[idx]);
+            burn_info
+                .nfts_metadata
+                .iter()
+                .cloned()
+                .enumerate()
+                .for_each(|(i, meta)| {
+                    self.mint_impl(&burn_info.account, &burn_info.nfts_ids[i], NFT_COUNT, meta)
+                });
+            for id in &burn_info.nfts_ids {
+                ids.push(*id);
+            }
         }
+        // // now we need to mint NFTs (same - just use mint_implementation to remove excessive usage)
+        // for (idx, metadata) in nfts_metadata.iter().enumerate() {
+        //     let amount = metadata.len();
+        //     if accounts[idx].is_zero() {
+        //         panic!("MTK: Mint to zero address")
+        //     }
+        //     if nft_ids[idx].len() != amount {
+        //         panic!("MTK: ids and amounts length mismatch")
+        //     }
+        //     metadata.iter().cloned().enumerate().for_each(|(i, meta)| {
+        //         self.mint_impl(&accounts[idx], &nft_ids[idx][i], NFT_COUNT, meta)
+        //     });
+        //     ids.append(&mut nft_ids[idx]);
+        // }
         msg::reply(
             MTKEvent::Transfer {
                 operator: msg::source(),

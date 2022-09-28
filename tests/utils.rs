@@ -244,27 +244,23 @@ pub fn transform_internal(
     from: u64,
     token_id: u128,
     amount: u128,
-    accounts: Vec<ActorId>,
-    nft_ids: Vec<Vec<TokenId>>,
-    nfts_metadata: Vec<Vec<Option<TokenMetadata>>>,
+    nfts: Vec<BurnToNFT>,
 ) {
+    let mut ids = vec![];
+    for burn_info in &nfts {
+        for id in burn_info.nfts_ids.clone() {
+            ids.push(id);
+        }
+    }
     let res = mtk.send(
         from,
         MyMTKAction::Transform {
             id: token_id,
             amount,
-            accounts,
-            nft_ids: nft_ids.clone(),
-            nfts_metadata,
+            nfts,
         },
     );
 
-    let mut ids = vec![];
-    for ids_subset in nft_ids.iter() {
-        for id in ids_subset.iter() {
-            ids.push(*id);
-        }
-    }
     let codec = MTKEvent::Transfer {
         operator: from.into(),
         from: ActorId::zero(),
