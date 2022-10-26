@@ -681,7 +681,7 @@ dependencies = [
 
 [[package]]
 name = "multitoken"
-version = "0.3.1"
+version = "0.3.2"
 dependencies = [
  "gear-lib",
  "gear-lib-derive",
@@ -693,7 +693,7 @@ dependencies = [
 
 [[package]]
 name = "multitoken-io"
-version = "0.3.1"
+version = "0.3.2"
 dependencies = [
  "gear-lib",
  "gstd",
