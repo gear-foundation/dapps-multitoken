@@ -1,12 +1,9 @@
 #![no_std]
 
-pub mod io;
-
 use gear_lib::multitoken::{io::*, mtk_core::*, state::*};
 use gear_lib_derive::{MTKCore, MTKTokenState, StateKeeper};
 use gstd::{msg, prelude::*, ActorId};
-
-use crate::io::*;
+use multitoken_io::*;
 
 const NFT_COUNT: u128 = 1;
 
@@ -27,10 +24,8 @@ pub trait SimpleMTKCore: MTKCore {
     fn transform(&mut self, id: TokenId, amount: u128, nfts: Vec<BurnToNFT>);
 }
 
-#[cfg(target_arch = "wasm32")]
 static mut CONTRACT: Option<SimpleMTK> = None;
 
-#[cfg(target_arch = "wasm32")]
 gstd::metadata! {
     title: "MTK",
     init:
@@ -43,7 +38,6 @@ gstd::metadata! {
         output: MTKQueryReply,
 }
 
-#[cfg(target_arch = "wasm32")]
 #[no_mangle]
 extern "C" fn init() {
     let config: InitMTK = msg::load().expect("Unable to decode InitConfig");
@@ -57,7 +51,6 @@ extern "C" fn init() {
     }
 }
 
-#[cfg(target_arch = "wasm32")]
 #[no_mangle]
 unsafe extern "C" fn handle() {
     let action: MyMTKAction = msg::load().expect("Could not load msg");
@@ -100,7 +93,6 @@ unsafe extern "C" fn handle() {
     }
 }
 
-#[cfg(target_arch = "wasm32")]
 #[no_mangle]
 unsafe extern "C" fn meta_state() -> *mut [i32; 2] {
     let query: MTKQuery = msg::load().expect("failed to decode input argument");
