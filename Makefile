@@ -1,4 +1,4 @@
-.PHONY: all build clean fmt fmt-check init linter pre-commit test
+.PHONY: all build debug-build clean fmt fmt-check init linter pre-commit test
 
 all: init build test
 
@@ -6,6 +6,11 @@ build:
 	@echo ──────────── Build release ────────────────────
 	@cargo +nightly build --release
 	@ls -l ./target/wasm32-unknown-unknown/release/*.wasm
+
+debug-build:
+	@echo ──────────── Build debug ────────────────────
+	@cargo +nightly build
+	@ls -l ./target/wasm32-unknown-unknown/debug/*.wasm
 
 clean:
 	@echo ──────────── Clean ────────────────────────────
