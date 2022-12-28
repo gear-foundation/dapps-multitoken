@@ -35,6 +35,6 @@ linter:
 
 pre-commit: fmt linter test
 
-test: build
+test:
 	@echo ──────────── Run tests ────────────────────────
-	@cargo +nightly test --release
+	@cargo +nightly t
