@@ -70,7 +70,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload
+      - name: Rename binaries
         run: |
           cd artifact
           for WASM in */*; do
@@ -88,6 +88,8 @@ jobs:
             fi
             mv $WASM $NAME.$BUILD_TYPE.$EXT
           done
+
+      - name: Upload
         uses: softprops/action-gh-release@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
