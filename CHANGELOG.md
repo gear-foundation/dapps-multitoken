@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.5] - 2023-04-27
+### Changed
+- Gear's dependencies pinned to the "5c685d0f15c412ab6ee019ceaf7ce084426dfb68" commit.
+
 ## [0.3.4] - 2023-03-03
 ### Changed
 - Updated `gstd`, `gtest`, `gear-wasm-builder` to the `testnet` branch.
