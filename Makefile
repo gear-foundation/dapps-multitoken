@@ -41,8 +41,8 @@ pre-commit: fmt lint full-test
 
 test:
 	@echo ⚙️ Running unit tests...
-	@cargo t --release -Fbinary-vendor
+	@cargo t -Fbinary-vendor
 
 full-test:
 	@echo ⚙️ Running all tests...
-	@cargo t -r --workspace -Fbinary-vendor -- --include-ignored --test-threads=1
+	@cargo t --workspace -Fbinary-vendor -- --include-ignored
